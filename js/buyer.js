@@ -1,7 +1,9 @@
+let bookings = [];
+let buyerProfile = null;
+
 
 const movieSelect = document.getElementById("movie");
 
-// Create movie preview section
 const preview = document.createElement("div");
 preview.style.marginTop = "20px";
 
@@ -11,7 +13,7 @@ poster.style.height = "250px";
 poster.style.objectFit = "cover";
 poster.style.borderRadius = "12px";
 poster.style.display = "none";
-// Create IMDb rating element
+
 const rating = document.createElement("p");
 rating.style.fontSize = "17px";
 rating.style.fontWeight = "bold";
@@ -49,7 +51,7 @@ preview.style.boxSizing = "border-box";
 preview.append(poster, rating, trailerButton, video);
 movieSelect.insertAdjacentElement("afterend", preview);
 
-// Movie selection
+
 function updateMoviePreview() {
     const selected = movieData[movieSelect.value];
 
@@ -73,7 +75,7 @@ function updateMoviePreview() {
 movieSelect.addEventListener("change", updateMoviePreview);
 updateMoviePreview();
 
-// Play trailer
+
 trailerButton.addEventListener("click", function () {
     const selected = movieData[movieSelect.value];
 
@@ -123,27 +125,27 @@ function updatePrice() {
         `Tickets: ${seatCount} | Category: ${category} | Total Price: ৳${total}`;
 }
 
-// Listen for changes
+
 
 quantityInput.addEventListener("input", updatePrice);
 categoryInput.addEventListener("change", updatePrice);
 
-// Listen for seat selection changes
+
 document.querySelectorAll('input[name="seat[]"]').forEach(seat => {
     seat.addEventListener("change", updatePrice);
 });
 
-// Calculate price when the page loads
+
 updatePrice();
 
 
 
-// Booking Form Validation
+
 const bookingForm = document.getElementById("bookingForm");
 const showDate = document.getElementById("date");
 const showTime = document.getElementById("time");
 
-// Use our custom validation messages
+
 bookingForm.noValidate = true;
 
 bookingForm.addEventListener("submit", function (event) {
@@ -155,40 +157,38 @@ bookingForm.addEventListener("submit", function (event) {
         'input[name="seat[]"]:checked'
     );
 
-    // 1. Check Movie
     if (movieSelect.value === "") {
         alert("Please select a movie.");
         movieSelect.focus();
         return;
     }
 
-    // 2. Check Show Date
     if (!showDate.value) {
         alert("Please select a show date.");
         showDate.focus();
         return;
     }
 
-    // 3. Check Show Time
+   
     if (!showTime.value) {
         alert("Please select a show time.");
         showTime.focus();
         return;
     }
-    // Check Seat Category
+    
     if (!categoryInput.value) {
         alert("Please select a seat category.");
         categoryInput.focus();
         return;
     }
-    // 4. Check Number of Tickets
+    
     if (!Number.isInteger(quantity) || quantity < 1) {
         alert("Please enter a valid number of tickets.");
         quantityInput.focus();
         return;
     }
 
-    // 5. Check Selected Seats
+   
     if (selectedSeats.length !== quantity) {
         alert(
             "You selected " + selectedSeats.length +
@@ -197,7 +197,7 @@ bookingForm.addEventListener("submit", function (event) {
         return;
     }
 
-    // 6. Check Buyer Information
+    
     const buyerNameInput = document.getElementById("name");
     const buyerEmailInput = document.getElementById("email");
     const buyerPhoneInput = document.getElementById("phone");
@@ -264,18 +264,8 @@ bookingForm.addEventListener("submit", function (event) {
         status: "Confirmed",
         bookingDate: new Date().toLocaleDateString()
     };
-
-    // Save Booking in LocalStorage
-    let bookings = JSON.parse(
-        localStorage.getItem("movieBookings")
-    ) || [];
-
+    // Keep bookings in memory only for this page session.
     bookings.push(booking);
-
-    localStorage.setItem(
-        "movieBookings",
-        JSON.stringify(bookings)
-    );
     renderBookings();
     renderBookingHistory();
     renderDigitalTicket();
@@ -292,7 +282,7 @@ const bookingSearch = document.getElementById("bookingSearch");
 function renderBookings(searchTerm = "") {
 
     const bookingTableBody = document.getElementById("bookingTableBody");
-    const bookings = JSON.parse(localStorage.getItem("movieBookings")) || [];
+    
     bookingTableBody.innerHTML = "";
 
     const filteredBookings = bookings.filter(function (booking) {
@@ -349,10 +339,6 @@ function renderBookingHistory() {
 
     const historyTableBody = document.getElementById("historyTableBody");
 
-    const bookings = JSON.parse(
-        localStorage.getItem("movieBookings")
-    ) || [];
-
     historyTableBody.innerHTML = "";
 
     if (bookings.length === 0) {
@@ -391,17 +377,12 @@ function renderBookingHistory() {
     });
 }
 
-// Load Booking History
 renderBookingHistory();
 
-// Display Digital Ticket
+
 function renderDigitalTicket() {
 
-    const bookings = JSON.parse(
-        localStorage.getItem("movieBookings")
-    ) || [];
-
-    // Get the latest booking
+    
     const booking = bookings.length > 0
         ? bookings[bookings.length - 1]
         : null;
@@ -443,18 +424,16 @@ function renderDigitalTicket() {
     document.getElementById("ticketPrice").textContent =
         "৳" + booking.totalPrice;
 
-    // Generate QR Code
     const qrCodeArea = document.getElementById("qrCodeArea");
 
     qrCodeArea.innerHTML = "";
 
-    const ticketData = JSON.stringify({
-        bookingId: booking.bookingId,
-        movie: booking.movie,
-        showDate: booking.showDate,
-        showTime: booking.showTime,
-        seats: booking.seats
-    });
+    const ticketData =
+        "Booking ID: " + booking.bookingId +
+        " | Movie: " + booking.movie +
+        " | Date: " + booking.showDate +
+        " | Time: " + booking.showTime +
+        " | Seats: " + booking.seats.join(", ");
     console.log("QR Code Data:", ticketData);
     function createQR() {
         qrCodeArea.innerHTML = "";
@@ -485,13 +464,10 @@ function renderDigitalTicket() {
     }
 }
 
-// Load Digital Ticket
+
 renderDigitalTicket();
 
-
-// ===================================
-// MY PROFILE - UPDATE PROFILE
-// ===================================
+================================
 
 (function () {
 
@@ -505,16 +481,9 @@ renderDigitalTicket();
     const emailError = document.getElementById("profileEmailError");
     const phoneError = document.getElementById("profilePhoneError");
 
-    // Load existing profile information
+  
     function loadProfile() {
-
-        const savedProfile = JSON.parse(
-            localStorage.getItem("buyerProfile")
-        );
-
-        const bookings = JSON.parse(
-            localStorage.getItem("movieBookings")
-        ) || [];
+        const savedProfile = buyerProfile;
 
         const latestBooking = [...bookings].reverse()[0];
 
@@ -533,7 +502,7 @@ renderDigitalTicket();
         updateWelcomeMessage();
     }
 
-    // Update header welcome message
+    
     function updateWelcomeMessage() {
 
         const buyerWelcome = document.getElementById("buyerWelcome");
@@ -544,7 +513,7 @@ renderDigitalTicket();
         }
     }
 
-    // Save updated profile
+   
     profileForm.addEventListener("submit", function (event) {
 
         event.preventDefault();
@@ -553,12 +522,12 @@ renderDigitalTicket();
         const email = profileEmail.value.trim();
         const phone = profilePhone.value.trim();
 
-        // Clear previous error messages
+
         nameError.textContent = "";
         emailError.textContent = "";
         phoneError.textContent = "";
 
-        // Validate name
+
         if (name.length < 2) {
             nameError.textContent =
                 "Please enter your full name.";
@@ -566,7 +535,7 @@ renderDigitalTicket();
             return;
         }
 
-        // Validate email
+        
         if (!isValidEmail(email)) {
             emailError.textContent =
                 "Please enter a valid email address.";
@@ -574,7 +543,7 @@ renderDigitalTicket();
             return;
         }
 
-        // Validate phone number
+      
         const phoneDigits = phone.replace(/\D/g, "");
 
         if (!/^\+?[0-9\s()-]{7,20}$/.test(phone) ||
@@ -588,37 +557,32 @@ renderDigitalTicket();
             return;
         }
 
-        // Create profile object
+        
         const updatedProfile = {
             name: name,
             email: email,
             phone: phone
         };
 
-        // Save profile in LocalStorage
-        localStorage.setItem(
-            "buyerProfile",
-            JSON.stringify(updatedProfile)
-        );
+        buyerProfile = updatedProfile;
 
-        // Update booking form information
+       
         document.getElementById("name").value = name;
         document.getElementById("email").value = email;
         document.getElementById("phone").value = phone;
 
-        // Update welcome message
+      
         updateWelcomeMessage();
 
         alert("Profile updated successfully!");
 
     });
 
-    // Load profile when page opens
+    
     loadProfile();
 
 })();
 
-// Cancellation & Refund System
 
 const cancellationForm = document.getElementById("cancellationForm");
 
@@ -628,47 +592,37 @@ cancellationForm.addEventListener("submit", function (event) {
     const bookingId = document.getElementById("bookingid").value.trim();
     const reason = document.getElementById("reason").value;
     const refundMethod = document.getElementById("refund").value;
+    
 
-    // Get existing bookings
-    let bookings = JSON.parse(
-        localStorage.getItem("movieBookings")
-    ) || [];
-
-    // Find booking
+    
     const booking = bookings.find(function (item) {
         return item.bookingId.toLowerCase() === bookingId.toLowerCase();
     });
 
-    // Check Booking ID
+   
     if (!booking) {
         alert("Booking ID not found. Please enter a valid Booking ID.");
         return;
     }
 
-    // Check booking status
+   
     if (booking.status === "Cancelled") {
         alert("This booking has already been cancelled.");
         return;
     }
 
-    // Save cancellation details
+
     booking.status = "Cancelled";
     booking.cancellationReason = reason;
     booking.refundMethod = refundMethod;
     booking.cancellationDate = new Date().toLocaleDateString();
 
-    // Update LocalStorage
-    localStorage.setItem(
-        "movieBookings",
-        JSON.stringify(bookings)
-    );
 
-    // Refresh booking tables
     renderBookings();
     renderBookingHistory();
     renderDigitalTicket();
 
-    // Success message
+
     alert("Cancellation request submitted successfully!");
 
     cancellationForm.reset();
