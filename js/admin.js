@@ -1,5 +1,5 @@
-var users = JSON.parse(localStorage.getItem("mtmsUsers")) || [];
-var theaters = JSON.parse(localStorage.getItem("mtmsTheaters")) || [
+var users = [];
+var theaters = [
     { name: "City Cinema", location: "Dhaka", screens: 4 },
     { name: "Star Cineplex", location: "Dhaka", screens: 6 }
 ];
@@ -28,15 +28,13 @@ function editUser(index) {
     if (newName != null && newEmail != null && newName != "" && newEmail != "") {
         users[index].name = newName;
         users[index].email = newEmail;
-        localStorage.setItem("mtmsUsers", JSON.stringify(users));
-        showUsers(users);
+
     }
 }
 
 function deleteUser(index) {
     users.splice(index, 1);
-    localStorage.setItem("mtmsUsers", JSON.stringify(users));
-    showUsers(users);
+
 }
 
 function editTheater(index) {
@@ -45,15 +43,13 @@ function editTheater(index) {
     var newScreens = prompt("Enter number of screens", theaters[index].screens);
     if (newName != null && newLocation != null && newScreens != null && newName != "" && newLocation != "" && newScreens != "") {
         theaters[index] = { name: newName, location: newLocation, screens: newScreens };
-        localStorage.setItem("mtmsTheaters", JSON.stringify(theaters));
-        showTheaters(theaters);
+
     }
 }
 
 function deleteTheater(index) {
     theaters.splice(index, 1);
-    localStorage.setItem("mtmsTheaters", JSON.stringify(theaters));
-    showTheaters(theaters);
+
 }
 
 document.getElementById("userForm").addEventListener("submit", function(event) {
@@ -66,8 +62,7 @@ document.getElementById("userForm").addEventListener("submit", function(event) {
         return;
     }
     users.push({ name: name, email: email, role: role });
-    localStorage.setItem("mtmsUsers", JSON.stringify(users));
-    showUsers(users);
+
     this.reset();
 });
 
@@ -81,8 +76,7 @@ document.getElementById("theaterForm").addEventListener("submit", function(event
         return;
     }
     theaters.push({ name: name, location: location, screens: screens });
-    localStorage.setItem("mtmsTheaters", JSON.stringify(theaters));
-    showTheaters(theaters);
+
     this.reset();
 });
 
@@ -102,6 +96,6 @@ document.getElementById("theaterSearch").addEventListener("input", function() {
     showTheaters(result);
 });
 
-document.getElementById("totalBookings").textContent = (JSON.parse(localStorage.getItem("mtmsBookings")) || []).length;
+document.getElementById("totalBookings").textContent = 0;
 showUsers(users);
 showTheaters(theaters);

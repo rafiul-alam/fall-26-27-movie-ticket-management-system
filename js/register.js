@@ -20,11 +20,8 @@ document.getElementById("registerForm").addEventListener("submit", function(even
         error.textContent = "Password must have at least 6 characters.";
         return;
     }
+  
 
-    var users = JSON.parse(localStorage.getItem("mtmsUsers")) || [];
-    users.push({ name: name, email: email, password: password, role: role });
-    localStorage.setItem("mtmsUsers", JSON.stringify(users));
-
-    success.textContent = "Account information saved in this browser.";
+    success.textContent = "Registration form validated. This demo does not save accounts.";
     document.getElementById("registerForm").reset();
 });

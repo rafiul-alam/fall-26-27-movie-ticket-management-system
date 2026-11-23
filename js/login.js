@@ -30,7 +30,6 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     }
 
     if (found) {
-        localStorage.setItem("mtmsRole", role);
         window.location.href = role + ".html";
     } else {
         message.textContent = "Email, password or role is incorrect.";

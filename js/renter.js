@@ -1,5 +1,5 @@
-var renterMovies = JSON.parse(localStorage.getItem("mtmsRenterMovies")) || [];
-var rentalApplications = JSON.parse(localStorage.getItem("mtmsRentalApplications")) || [];
+var renterMovies = [];
+var rentalApplications = [];
 
 function showRenterMovies(list) {
     var table = document.getElementById("renterMovieTable");
@@ -15,14 +15,14 @@ function editRenterMovie(index) {
     var duration = prompt("Duration", renterMovies[index].duration);
     if (title != null && genre != null && duration != null && title != "" && genre != "" && duration != "") {
         renterMovies[index] = { title: title, genre: genre, duration: duration };
-        localStorage.setItem("mtmsRenterMovies", JSON.stringify(renterMovies));
+
         showRenterMovies(renterMovies);
     }
 }
 
 function deleteRenterMovie(index) {
     renterMovies.splice(index, 1);
-    localStorage.setItem("mtmsRenterMovies", JSON.stringify(renterMovies));
+
     showRenterMovies(renterMovies);
 }
 
@@ -36,7 +36,7 @@ document.getElementById("renterMovieForm").addEventListener("submit", function(e
         return;
     }
     renterMovies.push({ title: title, genre: genre, duration: duration });
-    localStorage.setItem("mtmsRenterMovies", JSON.stringify(renterMovies));
+
     showRenterMovies(renterMovies);
     this.reset();
 });
@@ -57,14 +57,14 @@ function editRental(index) {
     var time = prompt("Time", rentalApplications[index].time);
     if (movie != null && theater != null && date != null && time != null && movie != "" && theater != "" && date != "" && time != "") {
         rentalApplications[index] = { movie: movie, theater: theater, date: date, time: time };
-        localStorage.setItem("mtmsRentalApplications", JSON.stringify(rentalApplications));
+
         showRentals(rentalApplications);
     }
 }
 
 function deleteRental(index) {
     rentalApplications.splice(index, 1);
-    localStorage.setItem("mtmsRentalApplications", JSON.stringify(rentalApplications));
+
     showRentals(rentalApplications);
 }
 
@@ -79,7 +79,7 @@ document.getElementById("rentalForm").addEventListener("submit", function(event)
         return;
     }
     rentalApplications.push({ movie: movie, theater: theater, date: date, time: time });
-    localStorage.setItem("mtmsRentalApplications", JSON.stringify(rentalApplications));
+
     showRentals(rentalApplications);
     this.reset();
 });
