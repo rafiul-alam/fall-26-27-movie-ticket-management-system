@@ -1,4 +1,4 @@
-// Default data
+
 let initialTickets = [
     { ticketId: "TCK-101", customerName: "Rahim Uddin", movieTitle: "Avatar: Fire & Ash", hall: "Hall-01", showTime: "11:30 AM", seatNumber: "A-12", status: "Booked", checkInTime: "-" },
     { ticketId: "TCK-102", customerName: "Karim Chowdhury", movieTitle: "Avatar: Fire & Ash", hall: "Hall-01", showTime: "11:30 AM", seatNumber: "A-13", status: "Checked-in", checkInTime: "11:15 AM" },
@@ -18,19 +18,12 @@ let screenSchedules = [
     { movieTitle: "Dune: Part Two", hall: "Hall-03", showTime: "06:45 PM", capacity: 50 }
 ];
 
-// Initialize localStorage
-function initLocalStorage() {
-    if (!localStorage.getItem("movieTickets")) {
-        let existing = localStorage.getItem("cinemaTickets");
-        localStorage.setItem("movieTickets", existing ? existing : JSON.stringify(initialTickets));
-    }
-    if (!localStorage.getItem("movieSupportIssues")) {
-        let existing = localStorage.getItem("cinemaSupportIssues");
-        localStorage.setItem("movieSupportIssues", existing ? existing : JSON.stringify(initialSupportIssues));
-    }
-}
 
-// Gate ticket verification
+let tickets = initialTickets;
+let supportIssues = initialSupportIssues;
+
+
+
 function handleCheckIn(event) {
     event.preventDefault();
 
@@ -44,14 +37,14 @@ function handleCheckIn(event) {
 
     let ticketCode = inputElement.value.trim().toUpperCase();
 
-    // Check empty input
+  
     if (ticketCode === "") {
         errorSpan.innerHTML = "Please enter or scan a ticket code.";
         errorSpan.style.color = "red";
         return false;
     }
 
-    let tickets = JSON.parse(localStorage.getItem("movieTickets")) || [];
+    let tickets = tickets;
     let foundIndex = -1;
 
     for (let i = 0; i < tickets.length; i++) {
@@ -61,7 +54,7 @@ function handleCheckIn(event) {
         }
     }
 
-    // Invalid ticket
+
     if (foundIndex === -1) {
         resultBox.style.display = "block";
         resultBox.className = "alert-box alert-error";
@@ -71,7 +64,6 @@ function handleCheckIn(event) {
 
     let ticket = tickets[foundIndex];
 
-    // Already checked in
     if (ticket.status === "Checked-in") {
         resultBox.style.display = "block";
         resultBox.className = "alert-box alert-warning";
@@ -79,13 +71,12 @@ function handleCheckIn(event) {
         return false;
     }
 
-    // Update status to Checked-in
+   
     let currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     ticket.status = "Checked-in";
     ticket.checkInTime = currentTime;
 
     tickets[foundIndex] = ticket;
-    localStorage.setItem("movieTickets", JSON.stringify(tickets));
 
     resultBox.style.display = "block";
     resultBox.className = "alert-box alert-success";
@@ -98,9 +89,9 @@ function handleCheckIn(event) {
     return true;
 }
 
-// Display tickets table
+
 function renderTicketsTable(filteredList) {
-    let tickets = filteredList || JSON.parse(localStorage.getItem("movieTickets")) || [];
+    let tickets = filteredList || tickets;
     let tableBody = document.getElementById("ticketsTableBody");
     let tableHtml = "";
 
@@ -128,10 +119,10 @@ function renderTicketsTable(filteredList) {
     tableBody.innerHTML = tableHtml;
 }
 
-// Search tickets
+
 function searchTickets() {
     let query = document.getElementById("ticketSearchBar").value.toLowerCase().trim();
-    let tickets = JSON.parse(localStorage.getItem("movieTickets")) || [];
+    let tickets = tickets;
 
     if (query === "") {
         renderTicketsTable(tickets);
@@ -153,7 +144,6 @@ function searchTickets() {
     renderTicketsTable(matching);
 }
 
-// Validate support form and add issue
 function validateSupportForm(event) {
     event.preventDefault();
 
@@ -216,9 +206,8 @@ function validateSupportForm(event) {
         status: "Open"
     };
 
-    let issues = JSON.parse(localStorage.getItem("movieSupportIssues")) || [];
+    let issues = supportIssues;
     issues.push(newIssue);
-    localStorage.setItem("movieSupportIssues", JSON.stringify(issues));
 
     document.getElementById("supportForm").reset();
     renderSupportTable();
@@ -226,9 +215,9 @@ function validateSupportForm(event) {
     return true;
 }
 
-// Display support table
+
 function renderSupportTable(filteredList) {
-    let issues = filteredList || JSON.parse(localStorage.getItem("movieSupportIssues")) || [];
+    let issues = filteredList || supportIssues;
     let tableBody = document.getElementById("supportTableBody");
     let tableHtml = "";
 
@@ -259,9 +248,9 @@ function renderSupportTable(filteredList) {
     tableBody.innerHTML = tableHtml;
 }
 
-// Toggle issue status
+
 function toggleIssueStatus(issueId) {
-    let issues = JSON.parse(localStorage.getItem("movieSupportIssues")) || [];
+    let issues = supportIssues;
 
     for (let i = 0; i < issues.length; i++) {
         if (issues[i].issueId === issueId) {
@@ -270,18 +259,17 @@ function toggleIssueStatus(issueId) {
         }
     }
 
-    localStorage.setItem("movieSupportIssues", JSON.stringify(issues));
     renderSupportTable();
 }
 
-// Delete support issue
+
 function deleteSupportIssue(issueId) {
     let confirmDelete = confirm("Are you sure you want to delete issue " + issueId + "?");
     if (!confirmDelete) {
         return;
     }
 
-    let issues = JSON.parse(localStorage.getItem("movieSupportIssues")) || [];
+    let issues = supportIssues;
     let updatedIssues = [];
 
     for (let i = 0; i < issues.length; i++) {
@@ -289,15 +277,14 @@ function deleteSupportIssue(issueId) {
             updatedIssues.push(issues[i]);
         }
     }
-
-    localStorage.setItem("movieSupportIssues", JSON.stringify(updatedIssues));
+    supportIssues = updatedIssues;
     renderSupportTable();
 }
 
-// Filter support issues
+
 function searchSupportIssues() {
     let query = document.getElementById("searchBar").value.toLowerCase().trim();
-    let issues = JSON.parse(localStorage.getItem("movieSupportIssues")) || [];
+    let issues = supportIssues;
 
     if (query === "") {
         renderSupportTable(issues);
@@ -318,9 +305,9 @@ function searchSupportIssues() {
     renderSupportTable(matchingIssues);
 }
 
-// Calculate screening reports
+
 function calculateReports() {
-    let tickets = JSON.parse(localStorage.getItem("movieTickets")) || [];
+    let tickets = tickets;
 
     let totalCapacity = 0;
     for (let i = 0; i < screenSchedules.length; i++) {
@@ -376,9 +363,8 @@ function calculateReports() {
     reportBody.innerHTML = reportHtml;
 }
 
-// Page load
+
 window.onload = function() {
-    initLocalStorage();
     renderTicketsTable();
     renderSupportTable();
     calculateReports();
