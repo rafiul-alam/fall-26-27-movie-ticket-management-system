@@ -435,3 +435,45 @@ td button {
 .form-page { align-items: center; }
 .form-card { box-shadow: 0 15px 45px rgba(0,0,0,.25); }
 .demo-box p { margin: 3px 0; }
+
+.demo-box {
+    margin-top: 20px;
+    padding: 14px;
+    background: #111319;
+    border: 1px dashed #f4b942;
+    border-radius: 8px;
+}
+
+.demo-title {
+    color: #f4b942;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.demo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.demo-table th,
+.demo-table td {
+    padding: 6px 8px;
+    text-align: left;
+    border-bottom: 1px solid #2a2d38;
+    color: #ccc;
+}
+
+.demo-table th {
+    color: #aaa;
+}
+
+.demo-row {
+    cursor: pointer;
+}
+
+.demo-row:hover td {
+    background: #1d2029;
+    color: #fff;
+}

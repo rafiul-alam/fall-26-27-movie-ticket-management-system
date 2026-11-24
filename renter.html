@@ -38,9 +38,16 @@
             <div class="table-wrap"><table><thead><tr><th>Movie</th><th>Theater</th><th>Date</th><th>Time</th><th>Status</th><th>Action</th></tr></thead><tbody id="rentalTable"></tbody></table></div>
         </section>
         <section class="panel">
+            <h2>Screening Schedule</h2>
+            <p>Your approved screenings, shown in date order.</p>
+            <input class="search" id="scheduleSearch" placeholder="Search schedule">
+            <div class="table-wrap"><table><thead><tr><th>Movie</th><th>Theater</th><th>Date</th><th>Time</th></tr></thead><tbody id="scheduleTable"></tbody></table></div>
+        </section>
+        <section class="panel">
             <h2>Screening Performance</h2>
-            <p>Track the performance of your approved screenings.</p>
-            <div class="summary-grid"><div><strong id="renterScreenings">0</strong><span>Applications</span></div><div><strong>৳0</strong><span>Estimated revenue</span></div></div>
+            <p>Track the performance of your approved movies.</p>
+            <div class="summary-grid"><div><strong id="renterApproved">0</strong><span>Approved Movies</span></div><div><strong id="renterScreenings">0</strong><span>Screenings</span></div><div><strong id="renterTickets">0</strong><span>Tickets Sold</span></div><div><strong id="renterAudience">0</strong><span>Audience Checked In</span></div><div><strong id="renterRevenue">৳0</strong><span>Revenue</span></div><div><strong id="renterOccupancy">0%</strong><span>Occupancy</span></div></div>
+            <div class="table-wrap"><table><thead><tr><th>Movie</th><th>Screenings</th><th>Tickets Sold</th><th>Audience</th><th>Revenue</th><th>Occupancy</th></tr></thead><tbody id="performanceTable"></tbody></table></div>
         </section>
 
     </main>
